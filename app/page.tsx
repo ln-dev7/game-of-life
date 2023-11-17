@@ -209,6 +209,7 @@ const GameOfLife: React.FC = () => {
               onChange={(e) =>
                 setSpeed(Math.max(1, parseInt(e.target.value, 10)))
               }
+              min={1}
             />
           </label>
           <label className="w-full text-sm text-slate-600 flex flex-col items-start justify-center gap-1">
@@ -218,6 +219,7 @@ const GameOfLife: React.FC = () => {
               type="number"
               value={numRows}
               onChange={(e) => setNumRows(parseInt(e.target.value, 10))}
+              min={5}
             />
           </label>
           <label className="w-full text-sm text-slate-600 flex flex-col items-start justify-center gap-1">
@@ -227,6 +229,7 @@ const GameOfLife: React.FC = () => {
               type="number"
               value={numCols}
               onChange={(e) => setNumCols(parseInt(e.target.value, 10))}
+              min={5}
             />
           </label>
         </div>
