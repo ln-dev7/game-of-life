@@ -10,8 +10,8 @@ type Cell = {
 };
 
 // Définition des constantes pour la taille de la grille
-const numRows = 30;
-const numCols = 50;
+const numRows = 100;
+const numCols = 100;
 
 // Fonction pour créer une grille vide
 const createEmptyGrid = (): Cell[][] => {
@@ -28,6 +28,7 @@ const GameOfLife: React.FC = () => {
   // Déclaration des états
   const [grid, setGrid] = useState<Cell[][]>(createEmptyGrid());
   const [running, setRunning] = useState<boolean>(false);
+  const [generation, setGeneration] = useState<number>(0);
 
   // Fonction pour initialiser la grille
   const initializeGrid = () => {
@@ -44,6 +45,7 @@ const GameOfLife: React.FC = () => {
       )
     );
     setGrid(newGrid);
+    setGeneration(0); // Réinitialise le nombre de tours à zéro
   };
 
   // Fonction pour lancer ou arrêter la simulation
@@ -55,6 +57,7 @@ const GameOfLife: React.FC = () => {
   const resetGrid = () => {
     initializeGrid();
     setRunning(false); // Arrête la simulation si elle est en cours
+    setGeneration(0); // Réinitialise le nombre de tours à zéro
   };
 
   // Fonction pour obtenir le nombre de voisins vivants d'une cellule
@@ -96,6 +99,7 @@ const GameOfLife: React.FC = () => {
       })
     );
     setGrid(newGrid);
+    setGeneration((prevGeneration) => prevGeneration + 1);
   }, [grid]);
 
   // Effet secondaire pour gérer la simulation automatique
@@ -117,7 +121,7 @@ const GameOfLife: React.FC = () => {
   }, []);
   
   return (
-    <div className="relative flex items-center justify-center min-h-screen">
+    <div className="relative flex items-center justify-center w-screen h-screen">
       <div
         className="border border-slate-300"
         style={{
@@ -141,7 +145,7 @@ const GameOfLife: React.FC = () => {
           ))
         )}
       </div>
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 flex flex-col items-center justify-center gap-2">
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 flex flex-col items-center justify-center gap-2">
         <div className="p-1 border-2 border-zinc-200 border-l-zinc-900 border-r-zinc-900 bg-slate-50 rounded-full flex items-center gap-2">
           <button
             className={`${
@@ -182,6 +186,12 @@ const GameOfLife: React.FC = () => {
           </Link>
         </div>
         <span className="text-sm bg-amber-600 font-medium text-white rounded-2xl py-1 px-3">Game Of Life</span>
+      </div>
+   
+      <div className="fixed p-4 rounded-lg top-4 right-4 flex flex-col items-center justify-center gap-2 bg-white shadow-lg">
+        <span className="block text-xs">
+        Nombre de tours écoulés : <span className="text-lg font-bold text-rose-500">{generation}</span>
+        </span>
       </div>
     </div>
   );
