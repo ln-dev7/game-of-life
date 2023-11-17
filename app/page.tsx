@@ -10,8 +10,8 @@ type Cell = {
 };
 
 // Définition des constantes pour la taille de la grille
-const numRowsDefault = 100;
-const numColsDefault = 100;
+const numRowsDefault = 150;
+const numColsDefault = 150;
 
 // Fonction pour créer une grille vide
 const createEmptyGrid = (numRows: number, numCols: number): Cell[][] => {
@@ -220,6 +220,7 @@ const GameOfLife: React.FC = () => {
               value={numRows}
               onChange={(e) => setNumRows(parseInt(e.target.value, 10))}
               min={5}
+              disabled
             />
           </label>
           <label className="w-full text-sm text-slate-600 flex flex-col items-start justify-center gap-1">
@@ -230,6 +231,7 @@ const GameOfLife: React.FC = () => {
               value={numCols}
               onChange={(e) => setNumCols(parseInt(e.target.value, 10))}
               min={5}
+              disabled
             />
           </label>
         </div>
