@@ -26,7 +26,7 @@ const createEmptyGrid = (numRows: number, numCols: number): Cell[][] => {
 
 const GameOfLife: React.FC = () => {
   // Déclaration des états
-  const [grid, setGrid] = useState<Cell[][]>(createEmptyGrid());
+  const [grid, setGrid] = useState<Cell[][]>(createEmptyGrid(numRowsDefault, numColsDefault));
   const [running, setRunning] = useState<boolean>(false);
   const [generation, setGeneration] = useState<number>(0);
   const [speed, setSpeed] = useState<number>(100); // Valeur par défaut de la vitesse en millisecondes
