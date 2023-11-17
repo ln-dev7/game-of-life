@@ -2,15 +2,18 @@
 import Link from "next/link";
 import React, { useState, useEffect, useCallback } from "react";
 
+// Définition du type Cell
 type Cell = {
   row: number;
   col: number;
   alive: boolean;
 };
 
+// Définition des constantes pour la taille de la grille
 const numRows = 30;
 const numCols = 50;
 
+// Fonction pour créer une grille vide
 const createEmptyGrid = (): Cell[][] => {
   const rows = [];
   for (let i = 0; i < numRows; i++) {
@@ -22,13 +25,16 @@ const createEmptyGrid = (): Cell[][] => {
 };
 
 const GameOfLife: React.FC = () => {
+  // Déclaration des états
   const [grid, setGrid] = useState<Cell[][]>(createEmptyGrid());
   const [running, setRunning] = useState<boolean>(false);
-  
+
+  // Fonction pour initialiser la grille
   const initializeGrid = () => {
     setGrid(createEmptyGrid());
   };
-  
+
+  // Fonction pour gérer le clic sur une cellule
   const handleCellClick = (row: number, col: number) => {
     const newGrid = grid.map((rows) =>
       rows.map((cell) =>
@@ -39,16 +45,19 @@ const GameOfLife: React.FC = () => {
     );
     setGrid(newGrid);
   };
-  
+
+  // Fonction pour lancer ou arrêter la simulation
   const toggleRunning = () => {
     setRunning(!running);
   };
-  
+
+  // Fonction pour réinitialiser la grille
   const resetGrid = () => {
     initializeGrid();
-    setRunning(false);
+    setRunning(false); // Arrête la simulation si elle est en cours
   };
-  
+
+  // Fonction pour obtenir le nombre de voisins vivants d'une cellule
   const countAliveNeighbors = (row: number, col: number): number => {
     const neighbors = [
       [-1, -1],
@@ -64,15 +73,18 @@ const GameOfLife: React.FC = () => {
     return neighbors.reduce((aliveCount, [rowOffset, colOffset]) => {
       const newRow = row + rowOffset;
       const newCol = col + colOffset;
-      
+
+      // Vérifie que les nouvelles coordonnées sont à l'intérieur de la grille
       if (newRow >= 0 && newRow < numRows && newCol >= 0 && newCol < numCols) {
+        // Incrémente le compteur si le voisin est vivant
         aliveCount += grid[newRow][newCol].alive ? 1 : 0;
       }
 
       return aliveCount;
     }, 0);
   };
-  
+
+  // Fonction pour effectuer une itération de la simulation
   const runSimulation = useCallback(() => {
     const newGrid = grid.map((rows) =>
       rows.map((cell) => {
@@ -85,23 +97,25 @@ const GameOfLife: React.FC = () => {
     );
     setGrid(newGrid);
   }, [grid]);
-  
+
+  // Effet secondaire pour gérer la simulation automatique
   useEffect(() => {
     let intervalId: any;
 
     if (running) {
-      intervalId = setInterval(runSimulation, 100);
+      intervalId = setInterval(runSimulation, 100); // ajustement de la vitesse
     } else {
       clearInterval(intervalId);
     }
 
     return () => clearInterval(intervalId);
   }, [running, runSimulation]);
-  
+
+  // Effet secondaire pour initialiser la grille au montage
   useEffect(() => {
     initializeGrid();
   }, []);
-
+  
   return (
     <div className="relative flex items-center justify-center min-h-screen">
       <div
