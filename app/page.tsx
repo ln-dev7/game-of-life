@@ -10,11 +10,11 @@ type Cell = {
 };
 
 // Définition des constantes pour la taille de la grille
-const numRows = 100;
-const numCols = 100;
+const numRowsDefault = 100;
+const numColsDefault = 100;
 
 // Fonction pour créer une grille vide
-const createEmptyGrid = (): Cell[][] => {
+const createEmptyGrid = (numRows: number, numCols: number): Cell[][] => {
   const rows = [];
   for (let i = 0; i < numRows; i++) {
     rows.push(
@@ -29,11 +29,14 @@ const GameOfLife: React.FC = () => {
   const [grid, setGrid] = useState<Cell[][]>(createEmptyGrid());
   const [running, setRunning] = useState<boolean>(false);
   const [generation, setGeneration] = useState<number>(0);
+  const [speed, setSpeed] = useState<number>(100); // Valeur par défaut de la vitesse en millisecondes
+  const [numRows, setNumRows] = useState<number>(numRowsDefault); // Valeur par défaut du nombre de lignes
+  const [numCols, setNumCols] = useState<number>(numColsDefault); // Valeur par défaut du nombre de colonnes
 
-  // Fonction pour initialiser la grille
-  const initializeGrid = () => {
-    setGrid(createEmptyGrid());
-  };
+  // Fonction pour créer une grille vide en fonction des paramètres actuels
+  const initializeGrid = useCallback(() => {
+    setGrid(createEmptyGrid(numRows, numCols));
+  }, [numRows, numCols]);
 
   // Fonction pour gérer le clic sur une cellule
   const handleCellClick = (row: number, col: number) => {
@@ -107,7 +110,7 @@ const GameOfLife: React.FC = () => {
     let intervalId: any;
 
     if (running) {
-      intervalId = setInterval(runSimulation, 100); // ajustement de la vitesse
+      intervalId = setInterval(runSimulation, speed); // ajustement de la vitesse
     } else {
       clearInterval(intervalId);
     }
@@ -118,8 +121,8 @@ const GameOfLife: React.FC = () => {
   // Effet secondaire pour initialiser la grille au montage
   useEffect(() => {
     initializeGrid();
-  }, []);
-  
+  }, [initializeGrid]);
+
   return (
     <div className="relative flex items-center justify-center w-screen h-screen">
       <div
@@ -185,13 +188,48 @@ const GameOfLife: React.FC = () => {
             </svg>
           </Link>
         </div>
-        <span className="text-sm bg-amber-600 font-medium text-white rounded-2xl py-1 px-3">Game Of Life</span>
-      </div>
-   
-      <div className="fixed p-4 rounded-lg top-4 right-4 flex flex-col items-center justify-center gap-2 bg-white shadow-lg">
-        <span className="block text-xs">
-        Nombre de tours écoulés : <span className="text-lg font-bold text-rose-500">{generation}</span>
+        <span className="text-sm bg-amber-600 font-medium text-white rounded-2xl py-1 px-3">
+          Game Of Life
         </span>
+      </div>
+
+      <div className="fixed w-80 p-4 rounded-lg top-4 right-4 flex flex-col items-center justify-center gap-2 bg-white shadow-lg">
+        <span className="block text-xs">
+          Nombre de tours écoulés :{" "}
+          <span className="text-lg font-bold text-rose-500">{generation}</span>
+        </span>
+        <div className="h-[1px] mb-2 w-full bg-slate-200"></div>
+        <div className="w-full flex flex-col items-start justify-center gap-4">
+          <label className="w-full text-sm text-slate-600 flex flex-col items-start justify-center gap-1">
+            Vitesse (en millisecondes):
+            <input
+            className="border-2 ring-0 outline-none rounded-md w-full px-4 py-2 focus:border-green-500"
+              type="number"
+              value={speed}
+              onChange={(e) =>
+                setSpeed(Math.max(1, parseInt(e.target.value, 10)))
+              }
+            />
+          </label>
+          <label className="w-full text-sm text-slate-600 flex flex-col items-start justify-center gap-1">
+            Nombre de lignes:
+            <input
+            className="border-2 ring-0 outline-none rounded-md w-full px-4 py-2 focus:border-rose-500"
+              type="number"
+              value={numRows}
+              onChange={(e) => setNumRows(parseInt(e.target.value, 10))}
+            />
+          </label>
+          <label className="w-full text-sm text-slate-600 flex flex-col items-start justify-center gap-1">
+            Nombre de colonnes:
+            <input
+            className="border-2 ring-0 outline-none rounded-md w-full px-4 py-2 focus:border-amber-500"
+              type="number"
+              value={numCols}
+              onChange={(e) => setNumCols(parseInt(e.target.value, 10))}
+            />
+          </label>
+        </div>
       </div>
     </div>
   );
