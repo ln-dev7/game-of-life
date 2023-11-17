@@ -124,7 +124,7 @@ const GameOfLife: React.FC = () => {
   }, [initializeGrid]);
 
   return (
-    <div className="relative flex items-center justify-center w-screen h-screen">
+    <div className="relative flex items-center justify-center w-screen h-scree bg-white">
       <div
         className="border border-slate-300"
         style={{
