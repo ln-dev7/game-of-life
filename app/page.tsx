@@ -173,7 +173,7 @@ const GameOfLife: React.FC = () => {
             LN
           </Link>
           <Link
-            href="https://github.com/ln-dev7"
+            href="https://github.com/ln-dev7/game-of-life"
             className="flex items-center justify-center h-10 w-10 rounded-full bg-zinc-800 font-semibold text-white hover:bg-zinc-950"
           >
             <svg
