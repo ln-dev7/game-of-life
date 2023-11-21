@@ -8,6 +8,8 @@ type Cell = {
   col: number;
   alive: boolean;
 };
+type HandleCellClickFunction = (row: number, col: number) => void;
+type CountAliveNeighborsFunction = (row: number, col: number) => number;
 
 // Définition des constantes pour la taille de la grille
 const numRowsDefault = 150;
@@ -15,7 +17,7 @@ const numColsDefault = 150;
 
 // Fonction pour créer une grille vide
 const createEmptyGrid = (numRows: number, numCols: number): Cell[][] => {
-  const rows = [];
+  const rows: Cell[][] = [];
   for (let i = 0; i < numRows; i++) {
     rows.push(
       Array.from(Array(numCols), (_, j) => ({ row: i, col: j, alive: false }))
@@ -26,7 +28,9 @@ const createEmptyGrid = (numRows: number, numCols: number): Cell[][] => {
 
 const GameOfLife: React.FC = () => {
   // Déclaration des états
-  const [grid, setGrid] = useState<Cell[][]>(createEmptyGrid(numRowsDefault, numColsDefault));
+  const [grid, setGrid] = useState<Cell[][]>(
+    createEmptyGrid(numRowsDefault, numColsDefault)
+  );
   const [running, setRunning] = useState<boolean>(false);
   const [generation, setGeneration] = useState<number>(0);
   const [speed, setSpeed] = useState<number>(100); // Valeur par défaut de la vitesse en millisecondes
@@ -39,7 +43,7 @@ const GameOfLife: React.FC = () => {
   }, [numRows, numCols]);
 
   // Fonction pour gérer le clic sur une cellule
-  const handleCellClick = (row: number, col: number) => {
+  const handleCellClick: HandleCellClickFunction = (row, col) => {
     const newGrid = grid.map((rows) =>
       rows.map((cell) =>
         cell.row === row && cell.col === col
@@ -52,20 +56,20 @@ const GameOfLife: React.FC = () => {
   };
 
   // Fonction pour lancer ou arrêter la simulation
-  const toggleRunning = () => {
+  const toggleRunning: VoidFunction = () => {
     setRunning(!running);
   };
 
   // Fonction pour réinitialiser la grille
-  const resetGrid = () => {
+  const resetGrid: VoidFunction = () => {
     initializeGrid();
     setRunning(false); // Arrête la simulation si elle est en cours
     setGeneration(0); // Réinitialise le nombre de tours à zéro
   };
 
   // Fonction pour obtenir le nombre de voisins vivants d'une cellule
-  const countAliveNeighbors = (row: number, col: number): number => {
-    const neighbors = [
+  const countAliveNeighbors: CountAliveNeighborsFunction = (row, col) => {
+    const neighbors: [number, number][] = [
       [-1, -1],
       [-1, 0],
       [-1, 1],
@@ -91,7 +95,7 @@ const GameOfLife: React.FC = () => {
   };
 
   // Fonction pour effectuer une itération de la simulation
-  const runSimulation = useCallback(() => {
+  const runSimulation: VoidFunction = useCallback(() => {
     const newGrid = grid.map((rows) =>
       rows.map((cell) => {
         const aliveNeighbors = countAliveNeighbors(cell.row, cell.col);
@@ -203,7 +207,7 @@ const GameOfLife: React.FC = () => {
           <label className="w-full text-sm text-slate-600 flex flex-col items-start justify-center gap-1">
             Vitesse (en millisecondes):
             <input
-            className="border-2 ring-0 outline-none rounded-md w-full px-4 py-2 focus:border-green-500"
+              className="border-2 ring-0 outline-none rounded-md w-full px-4 py-2 focus:border-green-500"
               type="number"
               value={speed}
               onChange={(e) =>
@@ -215,7 +219,7 @@ const GameOfLife: React.FC = () => {
           <label className="w-full text-sm text-slate-600 flex flex-col items-start justify-center gap-1">
             Nombre de lignes:
             <input
-            className="border-2 ring-0 outline-none rounded-md w-full px-4 py-2 focus:border-rose-500"
+              className="border-2 ring-0 outline-none rounded-md w-full px-4 py-2 focus:border-rose-500"
               type="number"
               value={numRows}
               onChange={(e) => setNumRows(parseInt(e.target.value, 10))}
@@ -226,7 +230,7 @@ const GameOfLife: React.FC = () => {
           <label className="w-full text-sm text-slate-600 flex flex-col items-start justify-center gap-1">
             Nombre de colonnes:
             <input
-            className="border-2 ring-0 outline-none rounded-md w-full px-4 py-2 focus:border-amber-500"
+              className="border-2 ring-0 outline-none rounded-md w-full px-4 py-2 focus:border-amber-500"
               type="number"
               value={numCols}
               onChange={(e) => setNumCols(parseInt(e.target.value, 10))}
